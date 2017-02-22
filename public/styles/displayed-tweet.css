@@ -47,7 +47,7 @@
   float: left;
 }
 
-.footer-tweet i{
+.footer-tweet .icons{
   float:right;
   color: #00a087;
   opacity: 0;
@@ -58,6 +58,6 @@
   opacity: 1.0;
 }
 
-.content-tweet:hover .footer-tweet i{
+.content-tweet:hover .footer-tweet .icons{
   opacity: 1.0;
 }
