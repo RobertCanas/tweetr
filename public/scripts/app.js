@@ -5,52 +5,8 @@
  */
 
 // Test / driver code (temporary). Eventually will get this from the server.
-var data = [{
-  "user": {
-    "name": "Newton",
-    "avatars": {
-      "small": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
-      "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
-      "large": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_200.png"
-    },
-    "handle": "@SirIsaac"
-  },
-  "content": {
-    "text": "If I have seen further it is by standing on the shoulders of giants"
-  },
-  "created_at": 1461116232227
-}, {
-  "user": {
-    "name": "Descartes",
-    "avatars": {
-      "small": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_50.png",
-      "regular": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc.png",
-      "large": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_200.png"
-    },
-    "handle": "@rd"
-  },
-  "content": {
-    "text": "Je pense , donc je suis"
-  },
-  "created_at": 1461113959088
-}, {
-  "user": {
-    "name": "Johann von Goethe",
-    "avatars": {
-      "small": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_50.png",
-      "regular": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1.png",
-      "large": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_200.png"
-    },
-    "handle": "@johann49"
-  },
-  "content": {
-    "text": "Es ist nichts schrecklicher als eine tätige Unwissenheit."
-  },
-  "created_at": 1461113796368
-}];
 
 $(document).ready(function() {
-
   function timeSince(date) {
 
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -58,40 +14,40 @@ $(document).ready(function() {
     var interval = Math.floor(seconds / 31536000);
 
     if (interval > 1) {
-        return interval + " years";
+      return interval + " years";
     }
     interval = Math.floor(seconds / 2592000);
     if (interval > 1) {
-        return interval + " months";
+      return interval + " months";
     }
     interval = Math.floor(seconds / 86400);
     if (interval > 1) {
-        return interval + " days";
+      return interval + " days";
     }
     interval = Math.floor(seconds / 3600);
     if (interval > 1) {
-        return interval + " hours";
+      return interval + " hours";
     }
     interval = Math.floor(seconds / 60);
     if (interval > 1) {
-        return interval + " minutes";
+      return interval + " minutes";
     }
     return Math.floor(seconds) + " seconds";
-}
+  }
 
-  function createTweetElement(database) {
+  function createTweetElement(tweets) {
 
     const $tweet = $("<article>").addClass("content-tweet");
 
     const $header = $('<header>').addClass("header-tweet");
-    const $username = $('<h3>').text(database.user.name).addClass("nameuser-tweet");
-    const $avatar = $('<img>').attr('src', database.user.avatars.small).addClass("photo-tweet");
-    const $handle = $('<p>').text(database.user.handle).addClass("handle-tweet");
+    const $username = $('<h3>').text(tweets.user.name).addClass("nameuser-tweet");
+    const $avatar = $('<img>').attr('src', tweets.user.avatars.small).addClass("photo-tweet");
+    const $handle = $('<p>').text(tweets.user.handle).addClass("handle-tweet");
 
-    const $content = $('<p>').text(database.content.text).addClass("info-tweet");
+    const $content = $('<p>').text(tweets.content.text).addClass("info-tweet");
 
     const $footer = $('<footer>').addClass("footer-tweet");
-    const $date = $('<span>').text(timeSince(database.created_at));
+    const $date = $('<span>').text(timeSince(tweets.created_at));
     const $icons = $('<div>').html('</i><i class="fa fa-flag"><i class="fa fa-retweet"></i><i class="fa fa-heart"></i>').addClass("icons");
 
     $header.append($handle, $avatar, $username);
@@ -105,15 +61,50 @@ $(document).ready(function() {
   //console.log($tweet); // to see what it looks like
 
   function renderTweets(tweets) {
+    $('.displayed-tweet').empty();
     for (key of tweets) {
-      $('.displayed-tweet').append(createTweetElement(key));
+      $('.displayed-tweet').prepend(createTweetElement(key));
     }
   }
-  renderTweets(data);
 
-  $('form').on('submit', function(event) {
+  function loadTweets() {
+    $.ajax({
+      method: 'GET',
+      url: '/tweets',
+      success: function(data) {
+        renderTweets(data);
+      }
+    });
+  }
+
+  loadTweets();
+
+
+  $('form').find('input').on('click', function(event) {
     event.preventDefault();
-    console.log( $( this ).serialize() );
+    const TWEET_LENGTH_MAX = 140;
+    let $text = $('form').find('textarea').val().length;
+    if ($text && $text <= TWEET_LENGTH_MAX) {
+      $.ajax({
+        method: 'POST',
+        url: '/tweets',
+        data: $(this).closest('form').serialize(),
+        success: function() {
+          loadTweets();
+          $('form')[0].reset();
+        }
+      });
+      return;
+    } else if (!$text) {
+      alert('nothing typed');
+      return;
+    } else if ($text > TWEET_LENGTH_MAX) {
+      alert('Exceeding Limit');
+      return;
+    }
+
+
+
   });
 
 });
