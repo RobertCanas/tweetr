@@ -48,6 +48,7 @@ var data = [{
   },
   "created_at": 1461113796368
 }];
+
 $(document).ready(function() {
 
   function timeSince(date) {
@@ -87,20 +88,18 @@ $(document).ready(function() {
     const $avatar = $('<img>').attr('src', database.user.avatars.small).addClass("photo-tweet");
     const $handle = $('<p>').text(database.user.handle).addClass("handle-tweet");
 
+    const $content = $('<p>').text(database.content.text).addClass("info-tweet");
+
     const $footer = $('<footer>').addClass("footer-tweet");
     const $date = $('<span>').text(timeSince(database.created_at));
     const $icons = $('<div>').html('</i><i class="fa fa-flag"><i class="fa fa-retweet"></i><i class="fa fa-heart"></i>').addClass("icons");
 
-    const $content = $('<p>').text(database.content.text).addClass("info-tweet");
-
-    $footer.append($date, $icons);
     $header.append($handle, $avatar, $username);
+    $footer.append($date, $icons);
     $tweet.append($header, $content, $footer);
 
     return $tweet;
-
   }
-
 
   // Test / driver code (temporary)
   //console.log($tweet); // to see what it looks like
@@ -112,5 +111,9 @@ $(document).ready(function() {
   }
   renderTweets(data);
 
-  //$('.displayed-tweet').append($tweet); // to add it to the page so we can make sure it's got all the right elements, classes, etc.
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    console.log( $( this ).serialize() );
+  });
+
 });
