@@ -3,6 +3,7 @@
     background: #eeeeee;
     border: 1px solid grey;
     border-radius: 10px;
+    margin: 2em;
     padding: 1em;
 }
 
@@ -13,11 +14,7 @@
   margin-top: 0;
 }
 
-.center {
-  margin: 2em;
-}
-
-textarea {
+.new-tweet textarea {
   padding: 5px;
   width: 100%;
 }
@@ -25,4 +22,8 @@ textarea {
 .counter {
   float: right;
   font-style: italic;
+}
+
+.error {
+  color: red;
 }
