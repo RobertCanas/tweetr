@@ -92,19 +92,23 @@ $(document).ready(function() {
         success: function() {
           loadTweets();
           $('form')[0].reset();
+          $('.counter').text('140');
         }
       });
       return;
     } else if (!$text) {
-      alert('nothing typed');
+      alert('Nothing Typed');
       return;
     } else if ($text > TWEET_LENGTH_MAX) {
       alert('Exceeding Limit');
       return;
     }
+  });
 
-
-
+  $('.navbar-compose').on('click', function() {
+    const $newTweet = $('.new-tweet');
+    $newTweet.slideToggle('fast');
+    $newTweet.find('textarea').focus();
   });
 
 });
