@@ -25,13 +25,13 @@
 
 .navbar-compose {
   background-color:#e6ffff;
-  border-radius: 10px;
+  border-radius: 5px;
   border:1px solid black;
   color: #00a087;
   float:right;
   line-height: 24px;
   margin: 12px 0;
-  padding: 16px 30px;
+  padding: 15px 20px;
 }
 
 .navbar-compose:hover {
